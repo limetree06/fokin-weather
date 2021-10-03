@@ -7,62 +7,51 @@
  */
 
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import PropsChild from './propsChild';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import Header from './src/header';
+import Generator from './src/generator';
+import NumList from './src/numList';
 
 class App extends Component {
   state = {
-    sampleText: 'Hello World',
-    sampleBoolean: true,
-    sampleNum: 1,
+    appName: 'My first app',
+    random: [36, 990],
   };
 
-  inputText = () => {
-    return this.state.sampleBoolean ? (
-      <Text>sampleBoolean is false </Text>
-    ) : (
-      <Text>sampleBoolean is ture </Text>
-    );
-  };
-
-  changeState = () => {
-    if (this.state.sampleBoolean) {
-      this.setState({
-        sampleText: 'Text Changed!!',
-        sampleBoolean: false,
-      });
-    } else {
-      this.setState({
-        sampleText: 'Hello World!!!',
-        sampleBoolean: true,
-      });
-    }
-  };
-
-  onAdd = () => {
+  onAddRandomNum = () => {
+    const randomNum = Math.floor(Math.random() * 100) + 1;
     this.setState(prevState => {
-      return {sampleNum: prevState.sampleNum + 1};
+      return {
+        random: [...prevState.random, randomNum],
+      };
+    });
+  };
+
+  onNumDelete = position => {
+    const newArray = this.state.random.filter((num, index) => {
+      return position != index;
+    });
+    this.setState({
+      random: newArray,
     });
   };
 
   render() {
     return (
       <View style={styles.mainView}>
-        <View style={styles.subView}>
-          <Text style={styles.mainText}>Hello World</Text>
+        <Header name={this.state.appName} />
+        <View>
+          <Text
+            style={styles.mainText}
+            onPress={() => alert('text touch event')}>
+            Hello World!!
+          </Text>
         </View>
-        <View style={styles.subView}>
-          <PropsChild
-            sampleText={this.state.sampleText}
-            changeState={this.changeState}
-          />
-        </View>
-        <View style={styles.anothersubView}>
-          <PropsChild
-            sampleText={this.state.sampleText}
-            changeState={this.changeState}
-          />
-        </View>
+
+        <Generator add={this.onAddRandomNum} />
+        <ScrollView style={{width: '100%'}}>
+          <NumList num={this.state.random} delete={this.onNumDelete} />
+        </ScrollView>
       </View>
     );
   }
@@ -70,31 +59,20 @@ class App extends Component {
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: 'white',
     paddingTop: 50,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   subView: {
-    flex: 1,
     backgroundColor: 'yellow',
     marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '50%',
   },
-  anothersubView: {
-    flex: 2,
-    backgroundColor: 'yellow',
-    marginBottom: 10,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   mainText: {
-    fontSize: 50,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: 'normal',
     color: 'red',
+    padding: 20,
   },
 });
 
