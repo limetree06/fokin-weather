@@ -7,12 +7,14 @@
  */
 
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
+import PropsChild from './propsChild';
 
 class App extends Component {
   state = {
     sampleText: 'Hello World',
-    sampleBoolean: false,
+    sampleBoolean: true,
+    sampleNum: 1,
   };
 
   inputText = () => {
@@ -24,17 +26,42 @@ class App extends Component {
   };
 
   changeState = () => {
-    this.setState({
-      sampleText: 'Text Changed!!',
+    if (this.state.sampleBoolean) {
+      this.setState({
+        sampleText: 'Text Changed!!',
+        sampleBoolean: false,
+      });
+    } else {
+      this.setState({
+        sampleText: 'Hello World!!!',
+        sampleBoolean: true,
+      });
+    }
+  };
+
+  onAdd = () => {
+    this.setState(prevState => {
+      return {sampleNum: prevState.sampleNum + 1};
     });
   };
 
   render() {
     return (
-      <View>
-        <Text onPress={this.changeState}>{this.state.sampleText}</Text>
+      <View style={styles.background}>
+        <PropsChild
+          sampleText={this.state.sampleText}
+          changeState={this.changeState}
+        />
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 export default App;
